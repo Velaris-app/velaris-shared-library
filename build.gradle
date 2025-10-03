@@ -47,7 +47,7 @@ publishing {
 		create("mavenJava", MavenPublication) {
 			from components.java
 			groupId = project.group
-			artifactId = "velaris-api"
+			artifactId = "velaris-shared-library"
 			version = project.version
 		}
 	}

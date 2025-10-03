@@ -6,4 +6,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'shared'
+rootProject.name = 'velaris-shared-library'
