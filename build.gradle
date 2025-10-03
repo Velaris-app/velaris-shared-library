@@ -1,0 +1,65 @@
+plugins {
+	id 'java-library'
+	id 'io.spring.dependency-management' version '1.1.7'
+	id 'maven-publish'
+	id 'pl.allegro.tech.build.axion-release' version '1.20.1'
+}
+
+group = 'com.velaris'
+description = 'Velaris shared library'
+
+scmVersion {
+	tag {
+		prefix = 'v'
+	}
+	versionIncrementer 'incrementPatch'
+}
+
+project.version = scmVersion.version
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	compileOnly(libs.lombok)
+	annotationProcessor(libs.lombok)
+	implementation(libs.spring.boot.starter.data.jpa)
+	implementation(libs.spring.boot.starter.validation)
+	implementation(libs.spring.boot.starter.web)
+	implementation(libs.spring.boot.starter.security)
+	implementation(libs.jjwt.api)
+	runtimeOnly(libs.jjwt.impl)
+	runtimeOnly(libs.jjwt.jackson)
+	testImplementation(libs.spring.boot.starter.test)
+	testImplementation(libs.testcontainers.junit)
+	testRuntimeOnly(libs.junit.platform.launcher)
+}
+
+publishing {
+	publications {
+		create("mavenJava", MavenPublication) {
+			from components.java
+			groupId = project.group
+			artifactId = "velaris-api"
+			version = project.version
+		}
+	}
+
+	repositories {
+		maven {
+			name = "GitHubPackages"
+			url = uri("https://maven.pkg.github.com/Velaris-app/velaris-api")
+			credentials {
+				username = System.getenv("GITHUB_ACTOR") ?: project.findProperty("gpr.user")
+				password = System.getenv("GITHUB_TOKEN") ?: project.findProperty("gpr.token")
+			}
+		}
+	}
+}
