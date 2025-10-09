@@ -1,15 +1,16 @@
 package com.velaris.shared.config;
 
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import java.util.List;
 
+@Data
 @Configuration
 @ConfigurationProperties(prefix = "cors")
-public record CorsProperties(
-        List<String> allowedOrigins,
-        List<String> allowedMethods,
-        List<String> allowedHeaders,
-        Boolean allowCredentials
-) {
+public class CorsProperties {
+    private List<String> allowedOrigins;
+    private List<String> allowedMethods;
+    private List<String> allowedHeaders;
+    private boolean allowCredentials;
 }
