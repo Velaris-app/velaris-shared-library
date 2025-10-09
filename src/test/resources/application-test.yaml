@@ -1,0 +1,16 @@
+jwt:
+  secret: Z3xG4JghB82s1q0l2Zdk23H7X3YpMfBzGzUoPqvA1QmK2rT0p9vE+Q==
+  expiration-ms: 360
+
+security:
+  public-endpoints: "/api/auth/**,/swagger-ui/**,/v3/api-docs/**"
+
+cors:
+  allowed-origins:
+    - "http://localhost:3000"
+  allowed-methods:
+    - "GET"
+    - "POST"
+  allowed-headers:
+    - "*"
+  allow-credentials: true
