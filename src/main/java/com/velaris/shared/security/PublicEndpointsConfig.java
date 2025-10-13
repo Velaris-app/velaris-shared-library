@@ -1,20 +1,13 @@
 package com.velaris.shared.security;
 
-import lombok.Getter;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import java.util.Arrays;
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 import java.util.List;
 
-@Getter
-@Component
+@Data
+@Configuration
+@ConfigurationProperties(prefix = "security")
 public class PublicEndpointsConfig {
-
-    private final List<String> publicEndpoints;
-
-    public PublicEndpointsConfig(@Value("${security.public-endpoints}") String endpoints) {
-        this.publicEndpoints = Arrays.stream(endpoints.split(","))
-                                     .map(String::trim)
-                                     .toList();
-    }
+    private List<String> publicEndpoints;
 }
