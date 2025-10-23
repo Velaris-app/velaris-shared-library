@@ -1,10 +1,7 @@
 package com.velaris.shared.security;
 
 import com.velaris.shared.config.JwtProperties;
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import java.security.Key;
@@ -89,6 +86,17 @@ public class JwtProvider {
                 .parseClaimsJws(token)
                 .getBody()
                 .get(TOKEN_TYPE, String.class);
+    }
+
+    public long getExpiresInFromToken(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(this.key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        Instant now = Instant.now();
+        Instant exp = claims.getExpiration().toInstant();
+        return Math.max(0, exp.getEpochSecond() - now.getEpochSecond());
     }
 
     // ---------------- PRIVATE ----------------
