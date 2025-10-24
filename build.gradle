@@ -38,6 +38,7 @@ dependencies {
 	implementation(libs.bouncycastle.bcprov)
 
 	implementation(libs.jjwt.api)
+	implementation(libs.ua.parser)
 	runtimeOnly(libs.jjwt.impl)
 	runtimeOnly(libs.jjwt.jackson)
 

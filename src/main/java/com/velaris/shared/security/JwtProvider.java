@@ -20,41 +20,30 @@ public class JwtProvider {
     private final JwtProperties properties;
 
     // ---------------- ACCESS TOKEN ----------------
-    public String generateAccessToken(Long userId, String... roles) {
+    public String generateAccessToken(UUID userId, String... roles) {
         JwtBuilder builder = buildToken(userId.toString(), properties.getAccessExpirationMs())
                 .claim(TOKEN_TYPE, ACCESS);
-
         if (roles != null && roles.length > 0) {
             builder.claim(ROLES, roles);
         }
-
         return builder.compact();
     }
 
     public List<String> getRolesFromAccessToken(String token) {
-        var claims = Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        return getClaims(token).getOrDefault(ROLES, List.of())
+                instanceof List<?> list ? list.stream().map(Object::toString).toList() : List.of();
+    }
 
-        Object roles = claims.get(ROLES);
-        if (roles instanceof List<?> list) {
-            return list.stream().map(Object::toString).toList();
-        }
-        return List.of();
+    public UUID getUserIdFromAccessToken(String token) {
+        return UUID.fromString(getClaims(token).getSubject());
     }
 
     public boolean validateAccessToken(String token) {
         return validateToken(token);
     }
 
-    public Long getUserIdFromAccessToken(String token) {
-        return Long.valueOf(getUserId(token));
-    }
-
     // ---------------- REFRESH TOKEN ----------------
-    public String generateRefreshToken(Long userId) {
+    public String generateRefreshToken(UUID userId) {
         return buildToken(userId.toString(), properties.getRefreshExpirationMs())
                 .setId(UUID.randomUUID().toString())
                 .claim(TOKEN_TYPE, REFRESH)
@@ -65,45 +54,33 @@ public class JwtProvider {
         return validateToken(token);
     }
 
-    public Long getUserIdFromRefreshToken(String token) {
-        return Long.valueOf(getUserId(token));
+    public UUID getUserIdFromRefreshToken(String token) {
+        return UUID.fromString(getClaims(token).getSubject());
     }
 
     public String getJtiFromRefreshToken(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .getId();
+        return getClaims(token).getId();
     }
 
     // ---------------- HELPERS ----------------
     public String getTokenType(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .get(TOKEN_TYPE, String.class);
+        return getClaims(token).get(TOKEN_TYPE, String.class);
     }
 
     public long getExpiresInFromToken(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(this.key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
         Instant now = Instant.now();
-        Instant exp = claims.getExpiration().toInstant();
+        Instant exp = getClaims(token).getExpiration().toInstant();
         return Math.max(0, exp.getEpochSecond() - now.getEpochSecond());
     }
 
     // ---------------- PRIVATE ----------------
+    private Claims getClaims(String token) {
+        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+    }
+
     private JwtBuilder buildToken(String subject, long validityMs) {
         Instant now = Instant.now();
         Instant expiry = now.plusMillis(validityMs);
-
         return Jwts.builder()
                 .setSubject(subject)
                 .setIssuedAt(Date.from(now))
@@ -113,19 +90,10 @@ public class JwtProvider {
 
     private boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            getClaims(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
             return false;
         }
-    }
-
-    private String getUserId(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -30,7 +31,7 @@ public class JwtFilter extends OncePerRequestFilter {
         String token = resolveToken(request);
 
         if (token != null && jwtProvider.validateAccessToken(token)) {
-            Long userId = jwtProvider.getUserIdFromAccessToken(token);
+            UUID userId = jwtProvider.getUserIdFromAccessToken(token);
             var userDetails = userDetailsService.loadUserByUsername(userId.toString());
 
             var roles = jwtProvider.getRolesFromAccessToken(token);
