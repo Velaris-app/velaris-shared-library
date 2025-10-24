@@ -24,7 +24,7 @@ jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "jjwt" }
 jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "jjwt" }
 
 # Utils
-ua-parser = { module = "com.github.ua-parser:uap-java", version = "1.5.2" }
+ua-parser = { module = "com.github.ua-parser:uap-java", version = "1.6.1" }
 
 # Lombok
 lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
