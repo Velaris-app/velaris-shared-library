@@ -50,6 +50,13 @@ public class JwtProvider {
                 .compact();
     }
 
+    public String generateRefreshToken(UUID userId, UUID sessionId) {
+        return buildToken(userId.toString(), properties.getRefreshExpirationMs())
+                .setId(sessionId.toString())
+                .claim(TOKEN_TYPE, REFRESH)
+                .compact();
+    }
+
     public boolean validateRefreshToken(String token) {
         return validateToken(token);
     }
