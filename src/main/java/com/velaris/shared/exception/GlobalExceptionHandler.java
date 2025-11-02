@@ -26,8 +26,6 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.velaris.shared.exception.ErrorResponseUtils.build;
-
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -41,7 +39,7 @@ public class GlobalExceptionHandler {
             details.put(field, error.getDefaultMessage());
         });
         log.warn("Validation error: {}", details);
-        return build(HttpStatus.BAD_REQUEST, "Validation failed", details);
+        return ErrorResponseUtils.build(HttpStatus.BAD_REQUEST, "Validation failed", details);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
@@ -50,7 +48,7 @@ public class GlobalExceptionHandler {
         ex.getConstraintViolations().forEach(v ->
                 details.put(v.getPropertyPath().toString(), v.getMessage()));
         log.warn("Constraint violation: {}", details);
-        return build(HttpStatus.BAD_REQUEST, "Constraint violation", details);
+        return ErrorResponseUtils.build(HttpStatus.BAD_REQUEST, "Constraint violation", details);
     }
 
     // === REQUEST / MEDIA / PARAM ERRORS ===
@@ -63,41 +61,41 @@ public class GlobalExceptionHandler {
     })
     protected ResponseEntity<ErrorResponse> handleRequestIssues(Exception ex) {
         log.warn("Request issue: {}", ex.getMessage());
-        return build(HttpStatus.BAD_REQUEST, ex.getMessage());
+        return ErrorResponseUtils.build(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     // === SECURITY ===
     @ExceptionHandler({ AccessDeniedException.class })
     protected ResponseEntity<ErrorResponse> handleAccessDenied(Exception ex) {
         log.warn("Access denied: {}", ex.getMessage());
-        return build(HttpStatus.FORBIDDEN, "Access denied");
+        return ErrorResponseUtils.build(HttpStatus.FORBIDDEN, "Access denied");
     }
 
     // === DATA / DATABASE ===
     @ExceptionHandler({ EntityNotFoundException.class })
     protected ResponseEntity<ErrorResponse> handleEntityNotFound(EntityNotFoundException ex) {
         log.warn("Entity not found: {}", ex.getMessage());
-        return build(HttpStatus.NOT_FOUND, ex.getMessage());
+        return ErrorResponseUtils.build(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     protected ResponseEntity<ErrorResponse> handleIntegrityViolation(DataIntegrityViolationException ex) {
         log.error("Data integrity violation: {}", ex.getMessage());
-        return build(HttpStatus.CONFLICT, "Data integrity violation");
+        return ErrorResponseUtils.build(HttpStatus.CONFLICT, "Data integrity violation");
     }
 
     // === FILE UPLOAD ===
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     protected ResponseEntity<ErrorResponse> handleMaxUpload(MaxUploadSizeExceededException ex) {
         log.warn("File too large: {}", ex.getMessage());
-        return build(HttpStatus.PAYLOAD_TOO_LARGE, "Uploaded file too large");
+        return ErrorResponseUtils.build(HttpStatus.PAYLOAD_TOO_LARGE, "Uploaded file too large");
     }
 
     // === GENERIC FALLBACK ===
     @ExceptionHandler(IllegalArgumentException.class)
     protected ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException ex) {
         log.warn("Illegal argument: {}", ex.getMessage());
-        return build(HttpStatus.BAD_REQUEST, ex.getMessage());
+        return ErrorResponseUtils.build(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     // === PATH / BINDING / TYPE CONVERSION ===
@@ -109,26 +107,26 @@ public class GlobalExceptionHandler {
     })
     protected ResponseEntity<ErrorResponse> handleTypeOrBindingErrors(Exception ex) {
         log.warn("Binding/type error: {}", ex.getMessage());
-        return build(HttpStatus.BAD_REQUEST, "Invalid request parameter or path variable");
+        return ErrorResponseUtils.build(HttpStatus.BAD_REQUEST, "Invalid request parameter or path variable");
     }
 
     // === SERIALIZATION ===
     @ExceptionHandler(HttpMessageNotWritableException.class)
     protected ResponseEntity<ErrorResponse> handleSerializationError(HttpMessageNotWritableException ex) {
         log.error("Serialization error: {}", ex.getMessage());
-        return build(HttpStatus.INTERNAL_SERVER_ERROR, "Error serializing response body");
+        return ErrorResponseUtils.build(HttpStatus.INTERNAL_SERVER_ERROR, "Error serializing response body");
     }
 
     // === MULTIPART / FILE UPLOAD EDGE CASE ===
     @ExceptionHandler(MultipartException.class)
     protected ResponseEntity<ErrorResponse> handleMultipartError(MultipartException ex) {
         log.warn("Multipart error: {}", ex.getMessage());
-        return build(HttpStatus.BAD_REQUEST, "Invalid multipart request");
+        return ErrorResponseUtils.build(HttpStatus.BAD_REQUEST, "Invalid multipart request");
     }
 
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<ErrorResponse> handleAll(Exception ex) {
         log.error("Unexpected error: {}", ex.getMessage(), ex);
-        return build(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected error occurred");
+        return ErrorResponseUtils.build(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected error occurred");
     }
 }
