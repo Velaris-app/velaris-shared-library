@@ -2,23 +2,27 @@ package com.velaris.shared.exception;
 
 import lombok.experimental.UtilityClass;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
 import java.time.Instant;
 import java.util.Map;
 
 @UtilityClass
 public class ErrorResponseUtils {
 
-    public ErrorResponse build(HttpStatus status, String message) {
+    public ResponseEntity<ErrorResponse> build(HttpStatus status, String message) {
         return build(status, message, null);
     }
 
-    public ErrorResponse build(HttpStatus status, String message, Map<String, String> details) {
-        return ErrorResponse.builder()
+    public ResponseEntity<ErrorResponse> build(HttpStatus status, String message, Map<String, String> details) {
+        ErrorResponse body = ErrorResponse.builder()
                 .timestamp(Instant.now())
                 .status(status.value())
                 .error(status.getReasonPhrase())
-                .message(message)
-                .details(details)
+                .message(message != null ? message : "Unexpected error")
+                .details(details != null && !details.isEmpty() ? details : null)
                 .build();
+
+        return ResponseEntity.status(status).body(body);
     }
 }

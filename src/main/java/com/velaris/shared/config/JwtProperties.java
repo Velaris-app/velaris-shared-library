@@ -1,5 +1,6 @@
 package com.velaris.shared.config;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -8,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "jwt")
 public class JwtProperties {
-    private String secret;
-    private long accessExpirationMs;
-    private long refreshExpirationMs;
+    @NotNull private String secret;
+    @NotNull private long accessExpirationMs;
+    @NotNull private long refreshExpirationMs;
 }
