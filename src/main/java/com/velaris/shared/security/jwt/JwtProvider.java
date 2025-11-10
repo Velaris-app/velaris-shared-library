@@ -25,6 +25,10 @@ public class JwtProvider {
         return generateToken(userId, UUID.randomUUID(), properties.getAccessExpirationMs(), ACCESS, roles);
     }
 
+    public String generateAccessToken(UUID userId, UUID sessionId, String... roles) {
+        return generateToken(userId, sessionId, properties.getAccessExpirationMs(), ACCESS, roles);
+    }
+
     public String generateRefreshToken(UUID userId) {
         return generateToken(userId, UUID.randomUUID(), properties.getRefreshExpirationMs(), REFRESH);
     }
