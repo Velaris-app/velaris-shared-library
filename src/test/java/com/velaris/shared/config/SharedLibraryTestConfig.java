@@ -1,6 +1,5 @@
 package com.velaris.shared.config;
 
-import com.velaris.shared.security.validator.SessionValidator;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -29,11 +28,5 @@ public class SharedLibraryTestConfig {
                     .roles("USER")
                     .build()
         );
-    }
-
-    @Bean
-    @Profile("test")
-    public SessionValidator sessionValidator() {
-        return sessionId -> true;
     }
 }
