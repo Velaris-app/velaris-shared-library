@@ -1,4 +1,4 @@
-package com.velaris.shared.security;
+package com.velaris.shared.security.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

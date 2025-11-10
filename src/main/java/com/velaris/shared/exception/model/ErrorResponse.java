@@ -1,4 +1,4 @@
-package com.velaris.shared.exception;
+package com.velaris.shared.exception.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

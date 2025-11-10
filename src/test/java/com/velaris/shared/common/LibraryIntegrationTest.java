@@ -1,5 +1,6 @@
 package com.velaris.shared.common;
 
+import com.velaris.shared.config.SharedLibraryTestConfig;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 

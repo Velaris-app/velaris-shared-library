@@ -1,6 +1,5 @@
-package com.velaris.shared.common;
+package com.velaris.shared.config;
 
-import com.velaris.shared.config.SharedLibraryConfig;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;

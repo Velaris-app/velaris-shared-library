@@ -1,4 +1,4 @@
-package com.velaris.shared.security;
+package com.velaris.shared.security.user;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

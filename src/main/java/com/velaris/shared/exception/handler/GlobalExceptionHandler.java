@@ -1,5 +1,7 @@
-package com.velaris.shared.exception;
+package com.velaris.shared.exception.handler;
 
+import com.velaris.shared.exception.model.ErrorResponse;
+import com.velaris.shared.exception.model.ErrorResponseUtils;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;

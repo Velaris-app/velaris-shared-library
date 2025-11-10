@@ -1,4 +1,4 @@
-package com.velaris.shared.security;
+package com.velaris.shared.security.jwt;
 
 import lombok.NoArgsConstructor;
 

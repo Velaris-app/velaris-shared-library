@@ -1,5 +1,6 @@
-package com.velaris.shared.security;
+package com.velaris.shared.security.config;
 
+import com.velaris.shared.security.jwt.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package com.velaris.shared.exception;
+package com.velaris.shared.exception.model;
 
 import lombok.experimental.UtilityClass;
 import org.springframework.http.HttpStatus;

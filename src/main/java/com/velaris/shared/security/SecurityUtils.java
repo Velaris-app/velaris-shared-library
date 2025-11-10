@@ -1,5 +1,6 @@
 package com.velaris.shared.security;
 
+import com.velaris.shared.security.user.SecurityUserDetails;
 import lombok.experimental.UtilityClass;
 import org.springframework.security.core.context.SecurityContextHolder;
 import java.util.UUID;
