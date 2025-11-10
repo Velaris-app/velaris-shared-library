@@ -1,6 +1,5 @@
 package com.velaris.shared.security.jwt;
 
-import com.velaris.shared.security.validator.SessionValidator;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,7 +21,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
     private final UserDetailsService userDetailsService;
-    private final SessionValidator sessionValidator;
 
     @Override
     protected void doFilterInternal(
@@ -39,14 +37,6 @@ public class JwtFilter extends OncePerRequestFilter {
             var authorities = jwtProvider.getRoles(token).stream()
                     .map(SimpleGrantedAuthority::new)
                     .toList();
-
-            if (sessionValidator != null) {
-                UUID sessionId = jwtProvider.getJti(token);
-                if (!sessionValidator.isSessionValid(sessionId)) {
-                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    return;
-                }
-            }
 
             var auth = new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
             SecurityContextHolder.getContext().setAuthentication(auth);
